@@ -15,94 +15,52 @@ app.use(
 );
 app.use(bodyParser.json()); // Parse JSON bodies
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
-app.post("/contact", (req, res) => {
-  console.log(req.body);
-  console.log("Email: ", process.env.EMAIL);
-
-  // Corrected the route to include '/'
+app.post("/test", (req, res) => {
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: process.env.SMTP_HOST,
+    port: 587,
+    secure: false, // true for 465, false for other ports
     auth: {
-      user: process.env.EMAIL,
-      pass: process.env.PASSWORD,
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
     },
   });
 
   const mailOptions = {
-    from: req.body.email,
-    to: process.env.EMAIL,
-    subject: "contact form",
-    html: `
-        <html>
-            <head>
-                <style>
-                    body {
-                        font-family: Arial, sans-serif;
-                        line-height: 1.6;
-                    }
-                    .container {
-                        padding: 20px;
-                        border: 1px solid #ddd;
-                        border-radius: 5px;
-                        background-color: #f9f9f9;
-                    }
-                    .header {
-                        font-size: 24px;
-                        font-weight: bold;
-                        margin-bottom: 20px;
-                    }
-                    .content {
-                        font-size: 16px;
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="container">
-                    <div class="header">Name - ${req.body.name}</div>
-                    <div class="content"><strong>message</strong> <br>${req.body.message}</div>
-                </div>
-            </body>
-        </html>
-    `,
+    from: process.env.SMTP_USER,
+    to: "damangowdaman@gmail.com",
+    subject: "Test Email",
+    text: "This is a test email sent from the /test endpoint.",
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       return res.status(500).send(error.toString());
     }
-    res.status(200).send("Email sent: " + info.response);
+    res.status(200).send("Test email sent: " + info.response);
   });
 });
 
-app.post("/apply-internship", (req, res) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    phone,
-    dob,
-    college,
-    year,
-    skills,
-    interest,
-  } = req.body;
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 
+app.post("/contact", (req, res) => {
+  const { name, email, message } = req.body;
+  console.log("Request body: ", name, email, message);
   const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: process.env.SMTP_HOST,
+    port: 587,
+    secure: false, // true for 465, false for other ports
     auth: {
-      user: process.env.EMAIL,
-      pass: process.env.PASSWORD,
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
     },
   });
-
   const mailOptions = {
-    from: email,
-    to: "damangowdaman@gmail.com",
-    subject: "Internship Application",
+    from: process.env.SMTP_USER,
+    to: process.env.SMTP_USER,
+    subject: "New Contact Form Submission",
     html: `
       <html>
         <head>
@@ -129,8 +87,82 @@ app.post("/apply-internship", (req, res) => {
         </head>
         <body>
           <div class="container">
-            <div class="header">Internship Application from ${firstName} ${lastName}</div>
+            <div class="header">New Contact Form Submission</div>
             <div class="content">
+              <p><strong>Name:</strong> ${name}</p>
+              <p><strong>Email:</strong> ${email}</p>
+              <p><strong>Message:</strong> ${message}</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `,
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      return res.status(500).send(error.toString());
+    }
+    res.status(200).send("email sent: " + info.response);
+  });
+});
+
+app.post("/apply-internship", (req, res) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    dob,
+    college,
+    year,
+    skills,
+    interest,
+  } = req.body;
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.SMTP_USER,
+    to: process.env.SMTP_USER,
+    subject: `New Internship Application from ${firstName} ${lastName}`,
+    html: `
+      <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+            }
+            .container {
+              padding: 20px;
+              border: 1px solid #ddd;
+              border-radius: 5px;
+              background-color: #f9f9f9;
+            }
+            .header {
+              font-size: 24px;
+              font-weight: bold;
+              margin-bottom: 20px;
+            }
+            .content {
+              font-size: 16px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">New Internship Application</div>
+            <div class="content">
+              <p><strong>First Name:</strong> ${firstName}</p>
+              <p><strong>Last Name:</strong> ${lastName}</p>
               <p><strong>Email:</strong> ${email}</p>
               <p><strong>Phone:</strong> ${phone}</p>
               <p><strong>Date of Birth:</strong> ${dob}</p>
@@ -153,8 +185,8 @@ app.post("/apply-internship", (req, res) => {
   });
 
   const ackMailOptions = {
-    from: process.env.EMAIL,
-    to: req.body.email,
+    from: process.env.SMTP_USER,
+    to: email,
     subject: "Acknowledgment from G-ZofTech Tech Solutions",
     html: `
       <html>
@@ -182,8 +214,13 @@ app.post("/apply-internship", (req, res) => {
         </head>
         <body>
           <div class="container">
-            <div class="header">Thank you for contacting G-ZofTech Tech Solutions, ${firstName} ${lastName}</div>
-            <div class="content">We have received your application and will get back to you shortly.</div>
+            <div class="header">Acknowledgment from G-ZofTech Tech Solutions</div>
+            <div class="content">
+              <p>Dear ${firstName} ${lastName},</p>
+              <p>Thank you for your interest in the internship position with us. Our team will review your application and reach out to you soon.</p>
+              <p>Best regards,</p>
+              <p>G-ZofTech Tech Solutions</p>
+            </div>
           </div>
         </body>
       </html>
