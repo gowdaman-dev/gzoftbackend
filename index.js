@@ -98,11 +98,63 @@ app.post("/contact", (req, res) => {
       </html>
     `,
   };
+
+  const ackMailOptions = {
+    from: process.env.SMTP_USER,
+    to: email,
+    subject: "Acknowledgment of Internship Application",
+    html: `
+      <html>
+        <head>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              line-height: 1.6;
+            }
+            .container {
+              padding: 20px;
+              border: 1px solid #ddd;
+              border-radius: 5px;
+              background-color: #f9f9f9;
+            }
+            .header {
+              font-size: 24px;
+              font-weight: bold;
+              margin-bottom: 20px;
+            }
+            .content {
+              font-size: 16px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">Acknowledgment from G-ZofTech Tech Solutions</div>
+            <div class="content">
+              <p>Dear ${name},</p>
+              <p>Thank you for your interest in the internship position at G-ZofTech. We have successfully received your application, and our team will carefully review it. You can expect to hear from us soon with updates on the next steps.</p>
+              <p>Best regards,</p>
+              <p>Internship In-charge Team</p>
+              <p>G-ZofTech</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `,
+  };
+
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       return res.status(500).send(error.toString());
     }
     res.status(200).send("email sent: " + info.response);
+  });
+  transporter.sendMail(ackMailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending acknowledgment email: ", error);
+    } else {
+      console.log("Acknowledgment email sent: " + info.response);
+    }
   });
 });
 
