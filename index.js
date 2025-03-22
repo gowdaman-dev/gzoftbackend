@@ -102,7 +102,7 @@ app.post("/contact", (req, res) => {
   const ackMailOptions = {
     from: process.env.SMTP_USER,
     to: email,
-    subject: "Acknowledgment of Internship Application",
+    subject: "Acknowledgment of Enquiry Form Submission",
     html: `
       <html>
         <head>
@@ -132,9 +132,9 @@ app.post("/contact", (req, res) => {
             <div class="header">Acknowledgment from G-ZofTech Tech Solutions</div>
             <div class="content">
               <p>Dear ${name},</p>
-              <p>Thank you for your interest in the internship position at G-ZofTech. We have successfully received your application, and our team will carefully review it. You can expect to hear from us soon with updates on the next steps.</p>
+              <p>Thank you for submitting your enquiry to G-ZofTech. Our team has received your details and will get back to you soon.</p>
               <p>Best regards,</p>
-              <p>Internship In-charge Team</p>
+              <p>Customer Support Team </p>
               <p>G-ZofTech</p>
             </div>
           </div>
@@ -239,7 +239,7 @@ app.post("/apply-internship", (req, res) => {
   const ackMailOptions = {
     from: process.env.SMTP_USER,
     to: email,
-    subject: "Acknowledgment from G-ZofTech Tech Solutions",
+    subject: "Acknowledgment of Internship Application",
     html: `
       <html>
         <head>
@@ -269,16 +269,16 @@ app.post("/apply-internship", (req, res) => {
             <div class="header">Acknowledgment from G-ZofTech Tech Solutions</div>
             <div class="content">
               <p>Dear ${firstName} ${lastName},</p>
-              <p>Thank you for your interest in the internship position with us. Our team will review your application and reach out to you soon.</p>
+              <p>Thank you for your interest in the internship position at G-ZofTech. We have successfully received your application, and our team will carefully review it. You can expect to hear from us soon with updates on the next steps.</p>
               <p>Best regards,</p>
-              <p>G-ZofTech Tech Solutions</p>
+              <p>Internship In-charge Team</p>
+              <p>G-ZofTech</p>
             </div>
           </div>
         </body>
       </html>
     `,
   };
-
   transporter.sendMail(ackMailOptions, (error, info) => {
     if (error) {
       console.error("Error sending acknowledgment email: ", error);
