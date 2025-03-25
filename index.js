@@ -19,7 +19,7 @@ app.post("/test", (req, res) => {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: 587,
-    secure: false, // true for 465, false for other ports
+    secure: false, 
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
@@ -129,7 +129,7 @@ app.post("/contact", (req, res) => {
         </head>
         <body>
           <div class="container">
-            <div class="header">Acknowledgment from G-ZofTech Tech Solutions</div>
+            <div class="header">Acknowledgment from G-ZofTech </div>
             <div class="content">
               <p>Dear ${name},</p>
               <p>Thank you for submitting your enquiry to G-ZofTech. Our team has received your details and will get back to you soon.</p>
@@ -266,7 +266,7 @@ app.post("/apply-internship", (req, res) => {
         </head>
         <body>
           <div class="container">
-            <div class="header">Acknowledgment from G-ZofTech Tech Solutions</div>
+            <div class="header">Acknowledgment from G-ZofTech</div>
             <div class="content">
               <p>Dear ${firstName} ${lastName},</p>
               <p>Thank you for your interest in the internship position at G-ZofTech. We have successfully received your application, and our team will carefully review it. You can expect to hear from us soon with updates on the next steps.</p>
